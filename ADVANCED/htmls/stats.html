@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ЛКШ ОТБОР</title>
+
+    <!-- шрифт с гугл фонтс -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@700&display=swap" rel="stylesheet">
+</head>
+
+<style>
+    body {
+        background-color: #17161D;
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+        justify-content: center;
+        font-family: "Unbounded", sans-serif;
+        font-optical-sizing: auto;
+        font-weight: 700;
+        font-style: normal;
+    }
+
+    .buttons_block{
+        margin-top: 4.48vw;
+        width: 40.94vw;
+        height: 3.59vw;
+        background-color: #25242D;
+        border-radius: 1.04vw;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.26vw;
+    }
+
+    a{
+        text-decoration: none;
+        color: white;
+        font-size: 1.20vw;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .top_button {
+        width: 20.05vw;
+        height: 3.07vw;
+        border-radius: 1.04vw;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #5649C8;
+        gap: 0.52vw;
+    }
+
+    input {
+        width: 40.94vw;
+        height: 2.92vw;
+        border: 0px;
+        outline: 0px;
+        padding: 0px;
+        border-radius: 1.04vw;
+        background-color: #25242D;
+        margin-top: 2.08vw;
+        color: white;
+        font-size: 0.83vw;
+        box-sizing: border-box;
+        padding-right:  0.78vw;
+        padding-left: 0.78vw;
+        font-family: "Unbounded", sans-serif;
+        font-optical-sizing: auto;
+        font-weight: 700;
+        font-style: normal;
+    } 
+
+    .viwe_button{
+        cursor: pointer;
+        margin-top: 0.78vw;
+        width:  40.94vw;
+        height: 2.92vw;
+        background-color: #5649C8;
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 1.04vw;
+        font-size: 1.20vw;
+        transition: 0.5s;
+    }
+
+    .stats_block {
+        margin-top: 1.56vw;
+        margin-bottom: 0.78vw;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        transition: 0.5s;
+        opacity: 0;
+        visibility: hidden;
+    }
+    .line {
+        width:  40.94vw;
+        height: 0.21vw;
+        background-color: #25242D;
+        margin-top: 0.78vw;
+        margin-bottom: 0.78vw;
+    }
+
+    .stats {
+        width:  38.94vw;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .s_text {
+        color: white;
+        font-size: 0.83vw;
+    }
+</style>
+
+<script>
+    // функция отправки запроса на статистику команды
+    function httpGet() {
+        // элементы, по id
+        let el_1 = document.getElementById("1");
+        let el_2 = document.getElementById("2");
+        let el_3 = document.getElementById("3");
+        let stats_block = document.getElementById("stats_block");
+        let input = document.getElementById("input");
+        
+
+        // отправляем запрос
+        fetch('http://localhost:8000/stats?team_name=' +  input.value)
+            .then(response => {
+                if (!response.ok) {
+                    
+                    return response.json().then(errorData => {
+                        throw new Error(errorData.message || "Command not found");
+                    });
+                }
+                return response.json();
+            })
+            .then(data => {
+                // меняем элементы 
+                if (el_1) el_1.textContent = data.wins;
+                if (el_2) el_2.textContent = data.losses;
+                if (el_3) el_3.textContent = data.difference;
+
+                
+                // делаем таблицу видимой
+                stats_block.style.visibility = "visible"
+                stats_block.style.opacity = 1
+
+            })
+            .catch(error => {
+                // при ошибке скрываем таблицу
+                alert(error)
+                stats_block.style.visibility = "hidden"
+                stats_block.style.opacity = 0
+            });
+        }
+</script>
+
+
+
+<body>
+    <!-- верхние кнопки переключения -->
+    <div class="buttons_block">
+        <a href="http://localhost:8000/front/stats" class="top_button">
+            <svg width="1.51vw" height="1.56vw" viewBox="0 0 29 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M2.35625 18.6071L0 16.9286L7.25 5.5L11.6 10.5L17.4 1.21429L21.75 7.64286L26.6438 0L29 1.67857L21.8225 12.8929L17.5088 6.5L11.9988 15.3214L7.6125 10.2857L2.35625 18.6071ZM19.575 24.2857C20.59 24.2857 21.4479 23.9405 22.1488 23.25C22.8496 22.5595 23.2 21.7143 23.2 20.7143C23.2 19.7143 22.8496 18.869 22.1488 18.1786C21.4479 17.4881 20.59 17.1429 19.575 17.1429C18.56 17.1429 17.7021 17.4881 17.0013 18.1786C16.3004 18.869 15.95 19.7143 15.95 20.7143C15.95 21.7143 16.3004 22.5595 17.0013 23.25C17.7021 23.9405 18.56 24.2857 19.575 24.2857ZM26.97 30L23.055 26.1429C22.5475 26.4762 21.9977 26.7262 21.4056 26.8929C20.8135 27.0595 20.2033 27.1429 19.575 27.1429C17.7625 27.1429 16.2219 26.5179 14.9531 25.2679C13.6844 24.0179 13.05 22.5 13.05 20.7143C13.05 18.9286 13.6844 17.4107 14.9531 16.1607C16.2219 14.9107 17.7625 14.2857 19.575 14.2857C21.3875 14.2857 22.9281 14.9107 24.1969 16.1607C25.4656 17.4107 26.1 18.9286 26.1 20.7143C26.1 21.3333 26.0154 21.9345 25.8463 22.5179C25.6771 23.1012 25.4233 23.6429 25.085 24.1429L29 28L26.97 30Z" fill="white"/>
+            </svg>
+
+            статистика команды
+        </a>
+        <a style="background-color: #3B3855; color: #9087DF;" href="http://localhost:8000/front/versus" class="top_button">
+            <svg width="1.72vw" height="1.56vw" viewBox="0 0 33 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M22.275 21.6667C21.8075 21.6667 21.4156 21.5069 21.0994 21.1875C20.7831 20.8681 20.625 20.4722 20.625 20V13.3333C20.625 12.8611 20.7831 12.4653 21.0994 12.1458C21.4156 11.8264 21.8075 11.6667 22.275 11.6667H26.4C26.8675 11.6667 27.2594 11.8264 27.5756 12.1458C27.8919 12.4653 28.05 12.8611 28.05 13.3333V20C28.05 20.4722 27.8919 20.8681 27.5756 21.1875C27.2594 21.5069 26.8675 21.6667 26.4 21.6667H22.275ZM23.1 19.1667H25.575V14.1667H23.1V19.1667ZM4.95 21.6667V17.5C4.95 17.0278 5.10813 16.6319 5.42438 16.3125C5.74063 15.9931 6.1325 15.8333 6.6 15.8333H9.9V14.1667H4.95V11.6667H10.725C11.1925 11.6667 11.5844 11.8264 11.9006 12.1458C12.2169 12.4653 12.375 12.8611 12.375 13.3333V15.8333C12.375 16.3056 12.2169 16.7014 11.9006 17.0208C11.5844 17.3403 11.1925 17.5 10.725 17.5H7.425V19.1667H12.375V21.6667H4.95ZM15.2625 15V12.5H17.7375V15H15.2625ZM15.2625 20.8333V18.3333H17.7375V20.8333H15.2625ZM3.3 30C2.3925 30 1.61563 29.6736 0.969375 29.0208C0.323125 28.3681 0 27.5833 0 26.6667V6.66667C0 5.75 0.323125 4.96528 0.969375 4.3125C1.61563 3.65972 2.3925 3.33333 3.3 3.33333H8.25V0H11.55V3.33333H21.45V0H24.75V3.33333H29.7C30.6075 3.33333 31.3844 3.65972 32.0306 4.3125C32.6769 4.96528 33 5.75 33 6.66667V26.6667C33 27.5833 32.6769 28.3681 32.0306 29.0208C31.3844 29.6736 30.6075 30 29.7 30H3.3ZM3.3 26.6667H15.2625V24.1667H17.7375V26.6667H29.7V6.66667H17.7375V9.16667H15.2625V6.66667H3.3V26.6667Z" fill="#9087DF"/>
+            </svg>
+
+            сравнение игроков
+        </a>
+    </div>
+
+
+    <!-- поле ввода -->
+    <input id="input" placeholder="название команды" type="text">
+
+
+     <!-- кнопка -->
+    <div onclick="httpGet()" class="viwe_button">
+        смотреть 
+    </div>
+
+
+    <!-- блок с таблицой статистикти -->
+    <div id="stats_block" class="stats_block">
+       <div class="stats">
+            <div style="color: #9087DF;" class="s_text">выиграно матчей:</div>
+            <div id="1" class="s_text">1</div>
+       </div> 
+       
+       <div class="line"></div>
+
+       <div class="stats">
+            <div style="color: #9087DF;" class="s_text">проигранно матчей:</div>
+            <div id="2" class="s_text">1</div>
+       </div> 
+
+       <div class="line"></div>
+    
+       <div class="stats">
+            <div style="color: #9087DF;" class="s_text">разница забитых<br>и пропущенных мячей:</div>
+            <div id="3" class="s_text">1</div>
+       </div> 
+    </div>
+</body>
+</html>
